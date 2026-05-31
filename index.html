@@ -599,9 +599,28 @@ async function validarEnvio(){
 
     localStorage.setItem(clave, parseInt(numeroConsecutivo));
 
-    mostrarToast("✅ Evidencia enviada correctamente");
+mostrarToast("✅ Evidencia enviada correctamente");
 
-    actualizarInterfaz();
+/* LIMPIAR FORMULARIO */
+contrato.value = "";
+tipoFoto.value = "";
+foto.value = "";
+
+preview.src = "";
+preview.style.display = "none";
+previewBox.style.display = "none";
+
+contadorFotos.textContent = "📷 Fotos seleccionadas: 0";
+
+nombreGenerado.textContent = "---";
+nombreGeneradoBox.style.display = "none";
+
+resumenBox.style.display = "none";
+
+actualizarInterfaz();
+
+contrato.focus();
+
 }else{
             mostrarToast("❌ Error al enviar la evidencia");
         }
