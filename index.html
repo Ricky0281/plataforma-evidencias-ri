@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Plataforma Evidencias RI</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    padding:18px;
+    background:
+        radial-gradient(circle at top left, rgba(255,177,32,.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(0,112,192,.18), transparent 35%),
+        linear-gradient(135deg, #0b2d57 0%, #104b8f 45%, #0f2748 100%);
+}
+
+.contenedor{
+    max-width:540px;
+    margin:auto;
+}
+
+.tarjeta{
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.22);
+    backdrop-filter:blur(12px);
+    border-radius:24px;
+    padding:22px;
+    box-shadow:0 18px 45px rgba(0,0,0,.28);
+}
+
+.header-app{
+    background:linear-gradient(135deg, rgba(255,255,255,.20), rgba(255,255,255,.08));
+    border:1px solid rgba(255,255,255,.22);
+    border-radius:22px;
+    padding:20px;
+    text-align:center;
+    margin-bottom:18px;
+}
+
+h1{
+    color:white;
+    font-size:25px;
+    line-height:1.2;
+    margin-bottom:8px;
+    text-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+
+.subtitulo{
+    color:#dbeafe;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.credito{
+    display:inline-block;
+    background:linear-gradient(135deg, #ffffff, #ffb120);
+    color:#0b2d57;
+    padding:7px 14px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:800;
+    box-shadow:0 5px 15px rgba(0,0,0,.18);
+}
+
+.mascota{
+    margin-top:18px;
+    padding:18px;
+    border-radius:22px;
+    background:
+        radial-gradient(circle at center, rgba(255,177,32,.28), transparent 48%),
+        linear-gradient(135deg, rgba(255,255,255,.95), rgba(232,242,255,.90));
+    border:1px solid rgba(255,255,255,.55);
+}
+
+.mascota img{
+    max-width:155px;
+    width:100%;
+}
+
+.progreso-texto{
+    color:#0b2d57;
+    font-size:13px;
+    font-weight:800;
+    margin:18px 0 7px;
+}
+
+.barra-progreso{
+    height:12px;
+    background:rgba(255,255,255,.22);
+    border-radius:30px;
+    overflow:hidden;
+    margin-bottom:16px;
+}
+
+.barra{
+    width:0%;
+    height:100%;
+    background:linear-gradient(135deg, #ffb120, #ffffff);
+    transition:.3s ease;
+}
+
+.pasos{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin-bottom:18px;
+}
+
+.paso{
+    background:rgba(255,255,255,.35);
+    border:1px solid rgba(255,255,255,.25);
+    color:#0b2d57;
+    text-align:center;
+    padding:8px 5px;
+    border-radius:14px;
+    font-size:11px;
+    font-weight:800;
+}
+
+.paso.activo{
+    background:linear-gradient(135deg, #ffb120, #ffffff);
+    color:#0b2d57;
+    border:none;
+}
+
+.formulario{
+    background:rgba(255,255,255,.92);
+    border-radius:22px;
+    padding:20px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);
+}
+
+label{
+    display:block;
+    margin-top:14px;
+    margin-bottom:6px;
+    color:#0b2d57;
+    font-weight:800;
+    font-size:13px;
+}
+
+input, select{
+    width:100%;
+    padding:14px;
+    border:1px solid #bfd0e4;
+    border-radius:13px;
+    font-size:16px;
+    background:white;
+}
+
+input:focus, select:focus{
+    outline:none;
+    border-color:#1f6fb8;
+    box-shadow:0 0 0 3px rgba(31,111,184,.18);
+}
+
+.nombre-generado-box,
+.resumen-box,
+.preview-box{
+    margin-top:15px;
+    padding:15px;
+    border-radius:17px;
+    background:linear-gradient(135deg, #edf6ff, #fff7e8);
+    border:1px solid #cbdff4;
+}
+
+.nombre-generado-box{
+    text-align:center;
+}
+
+.nombre-generado-box p,
+.resumen-box p,
+.preview-box p{
+    color:#0b2d57;
+    font-size:14px;
+    font-weight:900;
+    margin-bottom:7px;
+}
+
+.nombre-generado-box strong{
+    color:#123f74;
+    font-size:16px;
+    word-break:break-all;
+}
+
+.resumen-box div{
+    color:#1f2937;
+    font-size:14px;
+    margin:6px 0;
+}
+
+.contador-fotos{
+    margin-top:8px;
+    color:#475569;
+    font-size:13px;
+    font-weight:700;
+}
+
+.preview-box{
+    text-align:center;
+}
+
+#preview{
+    display:none;
+    width:100%;
+    margin-top:10px;
+    border-radius:14px;
+}
+
+.btn{
+    width:100%;
+    margin-top:22px;
+    border:none;
+    padding:16px;
+    border-radius:15px;
+    font-size:18px;
+    font-weight:900;
+    cursor:pointer;
+    color:white;
+    background:linear-gradient(135deg, #0b4f9c, #1f8ad8);
+    box-shadow:0 8px 20px rgba(11,79,156,.32);
+    transition:.2s ease;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn.incompleto{
+    background:linear-gradient(
+        135deg,
+        #dbe4ef,
+        #cbd5e1
+    );
+
+    color:#1e3a5f;
+
+    box-shadow:none;
+}
+
+#toast{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%) translateY(-20px);
+    width:90%;
+    max-width:420px;
+    padding:14px 18px;
+    border-radius:14px;
+    background:#fff7d6;
+    color:#775200;
+    font-weight:900;
+    text-align:center;
+    box-shadow:0 8px 22px rgba(0,0,0,.25);
+    z-index:9999;
+    opacity:0;
+    pointer-events:none;
+    transition:.3s ease;
+}
+
+#toast.mostrar{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+@media(max-width:480px){
+    body{
+        padding:10px;
+    }
+
+    .tarjeta{
+        padding:14px;
+        border-radius:20px;
+    }
+
+    .header-app{
+        padding:18px 14px;
+    }
+
+    h1{
+        font-size:22px;
+    }
+
+    .formulario{
+        padding:17px;
+    }
+
+    .paso{
+        font-size:10px;
+        padding:7px 3px;
+    }
+
+    .mascota img{
+        max-width:145px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+    <div class="tarjeta">
+
+        <div class="header-app">
+
+            <h1>📸 Plataforma Evidencias Redes Internas</h1>
+
+            <p class="subtitulo">
+                Registro fotográfico de construcción de redes internas
+            </p>
+
+            <p class="credito">
+                ☕ Built with coffee by <strong>Ricky</strong>
+            </p>
+
+            <div class="mascota">
+                <img src="img/condugas-evidencias-ri.png" alt="Mascota Evidencias RI">
+            </div>
+
+        </div>
+
+        <div class="progreso-texto" id="progresoTexto">
+            Progreso del registro: 0%
+        </div>
+
+        <div class="barra-progreso">
+            <div class="barra" id="barra"></div>
+        </div>
+
+        <div class="pasos">
+            <div class="paso" id="pasoContrato">1. Contrato</div>
+            <div class="paso" id="pasoTipo">2. Evidencia</div>
+            <div class="paso" id="pasoFoto">3. Foto</div>
+            <div class="paso" id="pasoEnviar">4. Enviar</div>
+        </div>
+
+        <div class="formulario">
+
+            <label>Contrato</label>
+            <input type="text" id="contrato" placeholder="Ingrese el número de contrato">
+
+            <label>¿Qué evidencia va a registrar?</label>
+            <select id="tipoFoto">
+                <option value="">Seleccione...</option>
+                <option value="CM">📦 Centro de Medición (CM)</option>
+                <option value="AP">🏠 Acometida y Paño (AP)</option>
+                <option value="INT">🔧 Interna (INT)</option>
+                <option value="CONEX">🔥 Conexión Estufa (CONEX)</option>
+                <option value="OTRAS">📷 Otras Fotos (OTRAS)</option>
+            </select>
+
+            <div class="nombre-generado-box" id="nombreGeneradoBox" style="display:none;">
+                <p>📄 Nombre generado</p>
+                <strong id="nombreGenerado">---</strong>
+            </div>
+
+            <label>📷 Tomar fotografía o elegir desde galería</label>
+            <input type="file" id="foto" accept="image/*">
+
+            <div class="contador-fotos" id="contadorFotos">
+                📷 Fotos seleccionadas: 0
+            </div>
+
+            <div class="preview-box" id="previewBox" style="display:none;">
+                <p>📸 Vista previa</p>
+                <img id="preview">
+            </div>
+
+            <div class="resumen-box" id="resumenBox" style="display:none;">
+                <p>📋 Resumen del registro</p>
+                <div><strong>Contrato:</strong> <span id="resumenContrato">---</span></div>
+                <div><strong>Evidencia:</strong> <span id="resumenTipo">---</span></div>
+                <div><strong>Archivo:</strong> <span id="resumenArchivo">---</span></div>
+            </div>
+
+            <button class="btn incompleto" id="btnEnviar">
+                Complete la información
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const foto = document.getElementById('foto');
+const preview = document.getElementById('preview');
+const previewBox = document.getElementById('previewBox');
+const contrato = document.getElementById('contrato');
+const tipoFoto = document.getElementById('tipoFoto');
+const nombreGeneradoBox = document.getElementById('nombreGeneradoBox');
+const nombreGenerado = document.getElementById('nombreGenerado');
+const toast = document.getElementById('toast');
+
+const barra = document.getElementById('barra');
+const progresoTexto = document.getElementById('progresoTexto');
+const contadorFotos = document.getElementById('contadorFotos');
+
+const pasoContrato = document.getElementById('pasoContrato');
+const pasoTipo = document.getElementById('pasoTipo');
+const pasoFoto = document.getElementById('pasoFoto');
+const pasoEnviar = document.getElementById('pasoEnviar');
+
+const resumenBox = document.getElementById('resumenBox');
+const resumenContrato = document.getElementById('resumenContrato');
+const resumenTipo = document.getElementById('resumenTipo');
+const resumenArchivo = document.getElementById('resumenArchivo');
+
+const btnEnviar = document.getElementById('btnEnviar');
+
+const URL_POWER_AUTOMATE = "https://25cb4771c5ebe819a4a4d073ad5cf5.09.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c178ebefe0944efeb307e20c674c2ff1/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nl6fsaZ_ButDFT4_MouNKpb260nOCuwZ6sX8PWxfTUE";
+
+foto.addEventListener('change', function(){
+    const archivo = this.files[0];
+
+    if(!archivo){
+        preview.style.display = "none";
+        previewBox.style.display = "none";
+        contadorFotos.textContent = "📷 Fotos seleccionadas: 0";
+        actualizarInterfaz();
+        return;
+    }
+
+    preview.src = URL.createObjectURL(archivo);
+    preview.style.display = "block";
+    previewBox.style.display = "block";
+    contadorFotos.textContent = "📷 Fotos seleccionadas: 1";
+
+    actualizarInterfaz();
+});
+
+contrato.addEventListener('input', actualizarInterfaz);
+tipoFoto.addEventListener('click', validarContrato);
+tipoFoto.addEventListener('change', actualizarInterfaz);
+btnEnviar.addEventListener('click', validarEnvio);
+
+function validarContrato(){
+    const numeroContrato = contrato.value.trim();
+
+    if(numeroContrato === ""){
+        mostrarToast("⚠️ Primero debes ingresar el número de contrato");
+        tipoFoto.value = "";
+        contrato.focus();
+    }
+}
+
+function actualizarInterfaz(){
+    generarNombre();
+    actualizarProgreso();
+    actualizarResumen();
+    actualizarBoton();
+}
+
+function obtenerConsecutivoActual(numeroContrato, tipo){
+    const clave = `evidencia_${numeroContrato}_${tipo}`;
+    const consecutivoGuardado = localStorage.getItem(clave);
+
+    if(consecutivoGuardado){
+        return parseInt(consecutivoGuardado) + 1;
+    }
+
+    return 1;
+}
+
+function formatearConsecutivo(numero){
+    return String(numero).padStart(3, "0");
+}
+
+function generarNombre(){
+    const numeroContrato = contrato.value.trim();
+    const tipo = tipoFoto.value;
+
+    if(numeroContrato && tipo){
+        const consecutivo = obtenerConsecutivoActual(numeroContrato, tipo);
+        const consecutivoTexto = formatearConsecutivo(consecutivo);
+
+        nombreGenerado.textContent = `${numeroContrato}_${tipo}_${consecutivoTexto}.jpg`;
+        nombreGeneradoBox.style.display = "block";
+    }else{
+        nombreGeneradoBox.style.display = "none";
+        nombreGenerado.textContent = "---";
+    }
+}
+
+function actualizarProgreso(){
+    let progreso = 0;
+
+    const tieneContrato = contrato.value.trim() !== "";
+    const tieneTipo = tipoFoto.value !== "";
+    const tieneFoto = foto.files.length > 0;
+
+    pasoContrato.classList.toggle("activo", tieneContrato);
+    pasoTipo.classList.toggle("activo", tieneTipo);
+    pasoFoto.classList.toggle("activo", tieneFoto);
+
+    if(tieneContrato) progreso += 33;
+    if(tieneTipo) progreso += 33;
+    if(tieneFoto) progreso += 34;
+
+    pasoEnviar.classList.toggle("activo", progreso === 100);
+
+    barra.style.width = progreso + "%";
+    progresoTexto.textContent = `Progreso del registro: ${progreso}%`;
+}
+
+function actualizarResumen(){
+    const numeroContrato = contrato.value.trim();
+    const tipo = tipoFoto.value;
+    const archivo = nombreGenerado.textContent;
+
+    if(numeroContrato || tipo || foto.files.length > 0){
+        resumenBox.style.display = "block";
+        resumenContrato.textContent = numeroContrato || "---";
+        resumenTipo.textContent = tipo || "---";
+        resumenArchivo.textContent = archivo !== "---" ? archivo : "---";
+    }else{
+        resumenBox.style.display = "none";
+    }
+}
+
+function actualizarBoton(){
+    const tieneContrato = contrato.value.trim() !== "";
+    const tieneTipo = tipoFoto.value !== "";
+    const tieneFoto = foto.files.length > 0;
+
+    if(tieneContrato && tieneTipo && tieneFoto){
+        btnEnviar.textContent = "✅ Evidencia lista para enviar";
+        btnEnviar.classList.remove("incompleto");
+    }else{
+        btnEnviar.textContent = "Complete la información";
+        btnEnviar.classList.add("incompleto");
+    }
+}
+
+async function validarEnvio(){
+    const numeroContrato = contrato.value.trim();
+    const tipo = tipoFoto.value;
+    const archivo = foto.files[0];
+
+    if(numeroContrato === ""){
+        mostrarToast("⚠️ Ingrese el número de contrato");
+        contrato.focus();
+        return;
+    }
+
+    if(tipo === ""){
+        mostrarToast("⚠️ Seleccione el tipo de evidencia");
+        tipoFoto.focus();
+        return;
+    }
+
+    if(!archivo){
+        mostrarToast("⚠️ Seleccione una fotografía");
+        foto.focus();
+        return;
+    }
+
+    mostrarToast("⏳ Enviando evidencia...");
+
+    const contenidoBase64 = await convertirArchivoBase64(archivo);
+
+    const datos = {
+        contrato: numeroContrato,
+        tipoEvidencia: tipo,
+        nombreArchivo: nombreGenerado.textContent,
+        contenidoBase64: contenidoBase64
+    };
+
+    try{
+        const respuesta = await fetch(URL_POWER_AUTOMATE, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datos)
+        });
+
+        if(respuesta.ok){
+
+    const clave = `evidencia_${numeroContrato}_${tipo}`;
+    const nombreActual = nombreGenerado.textContent;
+    const partes = nombreActual.split("_");
+    const numeroConsecutivo = partes[2].replace(".jpg", "");
+
+    localStorage.setItem(clave, parseInt(numeroConsecutivo));
+
+    mostrarToast("✅ Evidencia enviada correctamente");
+
+    actualizarInterfaz();
+}else{
+            mostrarToast("❌ Error al enviar la evidencia");
+        }
+
+    }catch(error){
+        mostrarToast("❌ No se pudo conectar con Power Automate");
+        console.error(error);
+    }
+}
+
+function convertirArchivoBase64(archivo){
+    return new Promise(function(resolve, reject){
+        const lector = new FileReader();
+
+        lector.onload = function(){
+            const base64 = lector.result.split(",")[1];
+            resolve(base64);
+        };
+
+        lector.onerror = function(){
+            reject("Error al convertir la imagen");
+        };
+
+        lector.readAsDataURL(archivo);
+    });
+}
+
+function mostrarToast(mensaje){
+    toast.textContent = mensaje;
+    toast.classList.add("mostrar");
+
+    setTimeout(function(){
+        toast.classList.remove("mostrar");
+    }, 2500);
+}
+</script>
+
+</body>
+</html>
