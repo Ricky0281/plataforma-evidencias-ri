@@ -683,15 +683,39 @@ contrato.focus();
 
 function convertirArchivoBase64(archivo){
     return new Promise(function(resolve, reject){
+
         const lector = new FileReader();
 
-        lector.onload = function(){
-            const base64 = lector.result.split(",")[1];
-            resolve(base64);
+        lector.onload = function(event){
+            const img = new Image();
+
+            img.onload = function(){
+                const canvas = document.createElement("canvas");
+
+                const maxAncho = 1280;
+                const escala = maxAncho / img.width;
+
+                canvas.width = maxAncho;
+                canvas.height = img.height * escala;
+
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                const imagenComprimida = canvas.toDataURL("image/jpeg", 0.75);
+                const base64 = imagenComprimida.split(",")[1];
+
+                resolve(base64);
+            };
+
+            img.onerror = function(){
+                reject("Error al procesar la imagen");
+            };
+
+            img.src = event.target.result;
         };
 
         lector.onerror = function(){
-            reject("Error al convertir la imagen");
+            reject("Error al leer la imagen");
         };
 
         lector.readAsDataURL(archivo);
