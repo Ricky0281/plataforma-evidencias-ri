@@ -571,7 +571,7 @@ function actualizarResumen(){
     const tipo = tipoFoto.value;
     const archivo = nombreGenerado.textContent;
 
-    if(numeroContrato || tipo || foto.files.length > 0){
+    if(numeroContrato || tipo || archivoSeleccionado !== null){
         resumenBox.style.display = "block";
         resumenContrato.textContent = numeroContrato || "---";
         resumenTipo.textContent = tipo || "---";
@@ -612,11 +612,10 @@ async function validarEnvio(){
         return;
     }
 
-    if(!archivo){
-        mostrarToast("⚠️ Seleccione una fotografía");
-        foto.focus();
-        return;
-    }
+ if(!archivo){
+    mostrarToast("⚠️ Seleccione una fotografía");
+    return;
+}
 
     mostrarToast("⏳ Enviando evidencia...");
 
@@ -675,10 +674,10 @@ contrato.focus();
             mostrarToast("❌ Error al enviar la evidencia");
         }
 
-    }catch(error){
-        mostrarToast("❌ No se pudo conectar con Power Automate");
-        console.error(error);
-    }
+}catch(error){
+    console.error(error);
+    mostrarToast("❌ Error técnico");
+}
 }
 
 function convertirArchivoBase64(archivo){
