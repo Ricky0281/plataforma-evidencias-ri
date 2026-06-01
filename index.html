@@ -367,8 +367,40 @@ input:focus, select:focus{
                 <strong id="nombreGenerado">---</strong>
             </div>
 
-            <label>📷 Tomar fotografía o elegir desde galería</label>
-            <input type="file" id="foto" accept="image/*">
+<label>📷 Seleccione una opción</label>
+
+<div style="display:flex; gap:10px; margin-top:10px;">
+
+    <button
+        type="button"
+        class="btn"
+        style="margin-top:0;"
+        onclick="document.getElementById('fotoCamara').click();">
+        📸 Tomar fotografía
+    </button>
+
+    <button
+        type="button"
+        class="btn"
+        style="margin-top:0;"
+        onclick="document.getElementById('fotoGaleria').click();">
+        🖼️ Galería
+    </button>
+
+</div>
+
+<input
+    type="file"
+    id="fotoCamara"
+    accept="image/*"
+    capture="environment"
+    style="display:none;">
+
+<input
+    type="file"
+    id="fotoGaleria"
+    accept="image/*"
+    style="display:none;">
 
             <div class="contador-fotos" id="contadorFotos">
                 📷 Fotos seleccionadas: 0
@@ -398,7 +430,9 @@ input:focus, select:focus{
 <div id="toast"></div>
 
 <script>
-const foto = document.getElementById('foto');
+const fotoCamara = document.getElementById('fotoCamara');
+const fotoGaleria = document.getElementById('fotoGaleria');
+let archivoSeleccionado = null;
 const preview = document.getElementById('preview');
 const previewBox = document.getElementById('previewBox');
 const contrato = document.getElementById('contrato');
@@ -425,13 +459,18 @@ const btnEnviar = document.getElementById('btnEnviar');
 
 const URL_POWER_AUTOMATE = "https://25cb4771c5ebe819a4a4d073ad5cf5.09.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c178ebefe0944efeb307e20c674c2ff1/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nl6fsaZ_ButDFT4_MouNKpb260nOCuwZ6sX8PWxfTUE";
 
-foto.addEventListener('change', function(){
-    const archivo = this.files[0];
+function procesarArchivo(archivo){
+
+    archivoSeleccionado = archivo;
 
     if(!archivo){
+        archivoSeleccionado = null;
+
         preview.style.display = "none";
         previewBox.style.display = "none";
+
         contadorFotos.textContent = "📷 Fotos seleccionadas: 0";
+
         actualizarInterfaz();
         return;
     }
@@ -439,9 +478,18 @@ foto.addEventListener('change', function(){
     preview.src = URL.createObjectURL(archivo);
     preview.style.display = "block";
     previewBox.style.display = "block";
+
     contadorFotos.textContent = "📷 Fotos seleccionadas: 1";
 
     actualizarInterfaz();
+}
+
+fotoCamara.addEventListener('change', function(){
+    procesarArchivo(this.files[0]);
+});
+
+fotoGaleria.addEventListener('change', function(){
+    procesarArchivo(this.files[0]);
 });
 
 contrato.addEventListener('input', actualizarInterfaz);
@@ -502,7 +550,7 @@ function actualizarProgreso(){
 
     const tieneContrato = contrato.value.trim() !== "";
     const tieneTipo = tipoFoto.value !== "";
-    const tieneFoto = foto.files.length > 0;
+    const tieneFoto = archivoSeleccionado !== null;
 
     pasoContrato.classList.toggle("activo", tieneContrato);
     pasoTipo.classList.toggle("activo", tieneTipo);
@@ -536,7 +584,7 @@ function actualizarResumen(){
 function actualizarBoton(){
     const tieneContrato = contrato.value.trim() !== "";
     const tieneTipo = tipoFoto.value !== "";
-    const tieneFoto = foto.files.length > 0;
+    const tieneFoto = archivoSeleccionado !== null;
 
     if(tieneContrato && tieneTipo && tieneFoto){
         btnEnviar.textContent = "✅ Evidencia lista para enviar";
@@ -550,7 +598,7 @@ function actualizarBoton(){
 async function validarEnvio(){
     const numeroContrato = contrato.value.trim();
     const tipo = tipoFoto.value;
-    const archivo = foto.files[0];
+    const archivo = archivoSeleccionado;
 
     if(numeroContrato === ""){
         mostrarToast("⚠️ Ingrese el número de contrato");
@@ -604,7 +652,9 @@ mostrarToast("✅ Evidencia enviada correctamente");
 /* LIMPIAR FORMULARIO */
 contrato.value = "";
 tipoFoto.value = "";
-foto.value = "";
+fotoCamara.value = "";
+fotoGaleria.value = "";
+archivoSeleccionado = null;
 
 preview.src = "";
 preview.style.display = "none";
