@@ -384,7 +384,7 @@ input:focus, select:focus{
         class="btn"
         style="margin-top:0;"
         onclick="document.getElementById('fotoGaleria').click();">
-        🖼️ Galería
+        📁 Seleccionar archivo
     </button>
 
 </div>
@@ -392,14 +392,14 @@ input:focus, select:focus{
 <input
     type="file"
     id="fotoCamara"
-    accept="image/*"
+    accept="image/*,.pdf"
     capture="environment"
     style="display:none;">
 
 <input
     type="file"
     id="fotoGaleria"
-    accept="image/*"
+    accept="image/*,.pdf"
     style="display:none;">
 
             <div class="contador-fotos" id="contadorFotos">
@@ -529,6 +529,18 @@ function formatearConsecutivo(numero){
     return String(numero).padStart(3, "0");
 }
 
+function obtenerExtensionArchivo(){
+    if(!archivoSeleccionado){
+        return "jpg";
+    }
+
+    if(archivoSeleccionado.type === "application/pdf"){
+        return "pdf";
+    }
+
+    return "jpg";
+}
+
 function generarNombre(){
     const numeroContrato = contrato.value.trim();
     const tipo = tipoFoto.value;
@@ -536,8 +548,9 @@ function generarNombre(){
     if(numeroContrato && tipo){
         const consecutivo = obtenerConsecutivoActual(numeroContrato, tipo);
         const consecutivoTexto = formatearConsecutivo(consecutivo);
+        const extension = obtenerExtensionArchivo();
 
-        nombreGenerado.textContent = `${numeroContrato}_${tipo}_${consecutivoTexto}.jpg`;
+        nombreGenerado.textContent = `${numeroContrato}_${tipo}_${consecutivoTexto}.${extension}`;
         nombreGeneradoBox.style.display = "block";
     }else{
         nombreGeneradoBox.style.display = "none";
@@ -642,7 +655,7 @@ async function validarEnvio(){
     const clave = `evidencia_${numeroContrato}_${tipo}`;
     const nombreActual = nombreGenerado.textContent;
     const partes = nombreActual.split("_");
-    const numeroConsecutivo = partes[2].replace(".jpg", "");
+    const numeroConsecutivo = partes[2].split(".")[0];
 
     localStorage.setItem(clave, parseInt(numeroConsecutivo));
 
@@ -683,38 +696,80 @@ contrato.focus();
 function convertirArchivoBase64(archivo){
     return new Promise(function(resolve, reject){
 
+        // SI ES PDF
+        if(archivo.type === "application/pdf"){
+
+            const lector = new FileReader();
+
+            lector.onload = function(event){
+                const base64 = event.target.result.split(",")[1];
+                resolve(base64);
+            };
+
+            lector.onerror = function(){
+                reject("Error al leer el PDF");
+            };
+
+            lector.readAsDataURL(archivo);
+
+            return;
+        }
+
+        // SI ES IMAGEN
         const lector = new FileReader();
 
         lector.onload = function(event){
+
             const img = new Image();
 
             img.onload = function(){
+
                 const canvas = document.createElement("canvas");
 
                 const maxAncho = 1280;
-                const escala = maxAncho / img.width;
 
-                canvas.width = maxAncho;
-                canvas.height = img.height * escala;
+                let nuevoAncho = img.width;
+                let nuevoAlto = img.height;
+
+                if(img.width > maxAncho){
+
+                    const escala = maxAncho / img.width;
+
+                    nuevoAncho = maxAncho;
+                    nuevoAlto = img.height * escala;
+                }
+
+                canvas.width = nuevoAncho;
+                canvas.height = nuevoAlto;
 
                 const ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                const imagenComprimida = canvas.toDataURL("image/jpeg", 0.75);
-                const base64 = imagenComprimida.split(",")[1];
+                ctx.drawImage(
+                    img,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                const imagenComprimida =
+                    canvas.toDataURL("image/jpeg", 0.75);
+
+                const base64 =
+                    imagenComprimida.split(",")[1];
 
                 resolve(base64);
             };
 
             img.onerror = function(){
-                reject("Error al procesar la imagen");
+                reject("Error al procesar imagen");
             };
 
             img.src = event.target.result;
         };
 
         lector.onerror = function(){
-            reject("Error al leer la imagen");
+            reject("Error al leer imagen");
         };
 
         lector.readAsDataURL(archivo);
