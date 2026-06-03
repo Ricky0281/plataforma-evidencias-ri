@@ -113,7 +113,7 @@ h1{
 
 .pasos{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(3,1fr);
     gap:8px;
     margin-bottom:18px;
 }
@@ -151,7 +151,7 @@ label{
     font-size:13px;
 }
 
-input, select{
+input{
     width:100%;
     padding:14px;
     border:1px solid #bfd0e4;
@@ -160,7 +160,7 @@ input, select{
     background:white;
 }
 
-input:focus, select:focus{
+input:focus{
     outline:none;
     border-color:#1f6fb8;
     box-shadow:0 0 0 3px rgba(31,111,184,.18);
@@ -176,10 +176,6 @@ input:focus, select:focus{
     border:1px solid #cbdff4;
 }
 
-.nombre-generado-box{
-    text-align:center;
-}
-
 .nombre-generado-box p,
 .resumen-box p,
 .preview-box p{
@@ -187,12 +183,6 @@ input:focus, select:focus{
     font-size:14px;
     font-weight:900;
     margin-bottom:7px;
-}
-
-.nombre-generado-box strong{
-    color:#123f74;
-    font-size:16px;
-    word-break:break-all;
 }
 
 .resumen-box div{
@@ -209,14 +199,16 @@ input:focus, select:focus{
 }
 
 .preview-box{
-    text-align:center;
+    text-align:left;
 }
 
-#preview{
-    display:none;
-    width:100%;
+.lista-archivos{
     margin-top:10px;
-    border-radius:14px;
+    color:#0b2d57;
+    font-size:13px;
+    font-weight:800;
+    line-height:1.6;
+    word-break:break-all;
 }
 
 .btn{
@@ -239,15 +231,19 @@ input:focus, select:focus{
 }
 
 .btn.incompleto{
-    background:linear-gradient(
-        135deg,
-        #dbe4ef,
-        #cbd5e1
-    );
-
+    background:linear-gradient(135deg, #dbe4ef, #cbd5e1);
     color:#1e3a5f;
-
     box-shadow:none;
+}
+
+.botones-archivos{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
+
+.botones-archivos .btn{
+    margin-top:0;
 }
 
 #toast{
@@ -305,6 +301,10 @@ input:focus, select:focus{
     .mascota img{
         max-width:145px;
     }
+
+    .botones-archivos{
+        flex-direction:column;
+    }
 }
 </style>
 </head>
@@ -319,7 +319,7 @@ input:focus, select:focus{
             <h1>📸 Plataforma Evidencias Redes Internas</h1>
 
             <p class="subtitulo">
-                Registro fotográfico de construcción de redes internas
+                Registro fotográfico y certificados de redes internas
             </p>
 
             <p class="credito">
@@ -342,9 +342,8 @@ input:focus, select:focus{
 
         <div class="pasos">
             <div class="paso" id="pasoContrato">1. Contrato</div>
-            <div class="paso" id="pasoTipo">2. Evidencia</div>
-            <div class="paso" id="pasoFoto">3. Foto</div>
-            <div class="paso" id="pasoEnviar">4. Enviar</div>
+            <div class="paso" id="pasoFoto">2. Archivos</div>
+            <div class="paso" id="pasoEnviar">3. Enviar</div>
         </div>
 
         <div class="formulario">
@@ -352,70 +351,58 @@ input:focus, select:focus{
             <label>Contrato</label>
             <input type="text" id="contrato" placeholder="Ingrese el número de contrato">
 
-            <label>¿Qué evidencia va a registrar?</label>
-            <select id="tipoFoto">
-                <option value="">Seleccione...</option>
-                <option value="CM">📦 Centro de Medición (CM)</option>
-                <option value="AP">🏠 Acometida y Paño (AP)</option>
-                <option value="INT">🔧 Interna (INT)</option>
-                <option value="CONEX">🔥 Conexión Estufa (CONEX)</option>
-                <option value="OTRAS">📷 Otras Fotos (OTRAS)</option>
-            </select>
-
             <div class="nombre-generado-box" id="nombreGeneradoBox" style="display:none;">
-                <p>📄 Nombre generado</p>
-                <strong id="nombreGenerado">---</strong>
+                <p>📄 Archivos generados</p>
+                <div class="lista-archivos" id="nombreGenerado">---</div>
             </div>
 
-<label>📷 Seleccione una opción</label>
+            <label>📷 Seleccione una opción</label>
 
-<div style="display:flex; gap:10px; margin-top:10px;">
+            <div class="botones-archivos">
 
-    <button
-        type="button"
-        class="btn"
-        style="margin-top:0;"
-        onclick="document.getElementById('fotoCamara').click();">
-        📸 Tomar fotografía
-    </button>
+                <button
+                    type="button"
+                    class="btn"
+                    onclick="document.getElementById('fotoCamara').click();">
+                    📸 Tomar fotografía
+                </button>
 
-    <button
-        type="button"
-        class="btn"
-        style="margin-top:0;"
-        onclick="document.getElementById('fotoGaleria').click();">
-        📁 Seleccionar archivo
-    </button>
+                <button
+                    type="button"
+                    class="btn"
+                    onclick="document.getElementById('fotoGaleria').click();">
+                    📁 Seleccionar archivos
+                </button>
 
-</div>
+            </div>
 
-<input
-    type="file"
-    id="fotoCamara"
-    accept="image/*,.pdf"
-    capture="environment"
-    style="display:none;">
+            <input
+                type="file"
+                id="fotoCamara"
+                accept="image/*"
+                capture="environment"
+                style="display:none;">
 
-<input
-    type="file"
-    id="fotoGaleria"
-    accept="image/*,.pdf"
-    style="display:none;">
+            <input
+                type="file"
+                id="fotoGaleria"
+                accept="image/*,.pdf"
+                multiple
+                style="display:none;">
 
             <div class="contador-fotos" id="contadorFotos">
-                📷 Fotos seleccionadas: 0
+                📷 Archivos seleccionados: 0
             </div>
 
             <div class="preview-box" id="previewBox" style="display:none;">
-                <p>📸 Vista previa</p>
-                <img id="preview">
+                <p>📎 Archivos seleccionados</p>
+                <div class="lista-archivos" id="listaArchivos"></div>
             </div>
 
             <div class="resumen-box" id="resumenBox" style="display:none;">
                 <p>📋 Resumen del registro</p>
                 <div><strong>Contrato:</strong> <span id="resumenContrato">---</span></div>
-                <div><strong>Evidencia:</strong> <span id="resumenTipo">---</span></div>
-                <div><strong>Archivo:</strong> <span id="resumenArchivo">---</span></div>
+                <div><strong>Total archivos:</strong> <span id="resumenCantidad">0</span></div>
             </div>
 
             <button class="btn incompleto" id="btnEnviar">
@@ -432,11 +419,10 @@ input:focus, select:focus{
 <script>
 const fotoCamara = document.getElementById('fotoCamara');
 const fotoGaleria = document.getElementById('fotoGaleria');
-let archivoSeleccionado = null;
-const preview = document.getElementById('preview');
-const previewBox = document.getElementById('previewBox');
+
+let archivosSeleccionados = [];
+
 const contrato = document.getElementById('contrato');
-const tipoFoto = document.getElementById('tipoFoto');
 const nombreGeneradoBox = document.getElementById('nombreGeneradoBox');
 const nombreGenerado = document.getElementById('nombreGenerado');
 const toast = document.getElementById('toast');
@@ -446,76 +432,60 @@ const progresoTexto = document.getElementById('progresoTexto');
 const contadorFotos = document.getElementById('contadorFotos');
 
 const pasoContrato = document.getElementById('pasoContrato');
-const pasoTipo = document.getElementById('pasoTipo');
 const pasoFoto = document.getElementById('pasoFoto');
 const pasoEnviar = document.getElementById('pasoEnviar');
 
+const previewBox = document.getElementById('previewBox');
+const listaArchivos = document.getElementById('listaArchivos');
+
 const resumenBox = document.getElementById('resumenBox');
 const resumenContrato = document.getElementById('resumenContrato');
-const resumenTipo = document.getElementById('resumenTipo');
-const resumenArchivo = document.getElementById('resumenArchivo');
+const resumenCantidad = document.getElementById('resumenCantidad');
 
 const btnEnviar = document.getElementById('btnEnviar');
 
 const URL_POWER_AUTOMATE = "https://25cb4771c5ebe819a4a4d073ad5cf5.09.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c178ebefe0944efeb307e20c674c2ff1/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nl6fsaZ_ButDFT4_MouNKpb260nOCuwZ6sX8PWxfTUE";
 
-function procesarArchivo(archivo){
+function agregarArchivos(lista){
 
-    archivoSeleccionado = archivo;
+    const nuevosArchivos = Array.from(lista);
 
-    if(!archivo){
-        archivoSeleccionado = null;
+    nuevosArchivos.forEach(function(archivo){
 
-        preview.style.display = "none";
-        previewBox.style.display = "none";
+        const esImagen = archivo.type.startsWith("image/");
+        const esPDF = archivo.type === "application/pdf";
 
-        contadorFotos.textContent = "📷 Fotos seleccionadas: 0";
-
-        actualizarInterfaz();
-        return;
-    }
-
-    preview.src = URL.createObjectURL(archivo);
-    preview.style.display = "block";
-    previewBox.style.display = "block";
-
-    contadorFotos.textContent = "📷 Fotos seleccionadas: 1";
+        if(esImagen || esPDF){
+            archivosSeleccionados.push(archivo);
+        }
+    });
 
     actualizarInterfaz();
 }
 
 fotoCamara.addEventListener('change', function(){
-    procesarArchivo(this.files[0]);
+    agregarArchivos(this.files);
+    fotoCamara.value = "";
 });
 
 fotoGaleria.addEventListener('change', function(){
-    procesarArchivo(this.files[0]);
+    agregarArchivos(this.files);
+    fotoGaleria.value = "";
 });
 
 contrato.addEventListener('input', actualizarInterfaz);
-tipoFoto.addEventListener('click', validarContrato);
-tipoFoto.addEventListener('change', actualizarInterfaz);
 btnEnviar.addEventListener('click', validarEnvio);
 
-function validarContrato(){
-    const numeroContrato = contrato.value.trim();
-
-    if(numeroContrato === ""){
-        mostrarToast("⚠️ Primero debes ingresar el número de contrato");
-        tipoFoto.value = "";
-        contrato.focus();
-    }
-}
-
 function actualizarInterfaz(){
-    generarNombre();
+    generarNombres();
     actualizarProgreso();
     actualizarResumen();
     actualizarBoton();
+    actualizarListaArchivos();
 }
 
-function obtenerConsecutivoActual(numeroContrato, tipo){
-    const clave = `evidencia_${numeroContrato}_${tipo}`;
+function obtenerConsecutivoActual(numeroContrato){
+    const clave = `evidencia_${numeroContrato}`;
     const consecutivoGuardado = localStorage.getItem(clave);
 
     if(consecutivoGuardado){
@@ -529,29 +499,35 @@ function formatearConsecutivo(numero){
     return String(numero).padStart(3, "0");
 }
 
-function obtenerExtensionArchivo(){
-    if(!archivoSeleccionado){
-        return "jpg";
-    }
-
-    if(archivoSeleccionado.type === "application/pdf"){
+function obtenerExtensionArchivo(archivo){
+    if(archivo.type === "application/pdf"){
         return "pdf";
     }
 
     return "jpg";
 }
 
-function generarNombre(){
+function generarNombreArchivo(numeroContrato, archivo, posicion){
+    const consecutivoInicial = obtenerConsecutivoActual(numeroContrato);
+    const consecutivo = consecutivoInicial + posicion;
+    const consecutivoTexto = formatearConsecutivo(consecutivo);
+    const extension = obtenerExtensionArchivo(archivo);
+
+    return `${numeroContrato}_${consecutivoTexto}.${extension}`;
+}
+
+function generarNombres(){
     const numeroContrato = contrato.value.trim();
-    const tipo = tipoFoto.value;
 
-    if(numeroContrato && tipo){
-        const consecutivo = obtenerConsecutivoActual(numeroContrato, tipo);
-        const consecutivoTexto = formatearConsecutivo(consecutivo);
-        const extension = obtenerExtensionArchivo();
+    if(numeroContrato && archivosSeleccionados.length > 0){
 
-        nombreGenerado.textContent = `${numeroContrato}_${tipo}_${consecutivoTexto}.${extension}`;
+        const nombres = archivosSeleccionados.map(function(archivo, index){
+            return generarNombreArchivo(numeroContrato, archivo, index);
+        });
+
+        nombreGenerado.innerHTML = nombres.join("<br>");
         nombreGeneradoBox.style.display = "block";
+
     }else{
         nombreGeneradoBox.style.display = "none";
         nombreGenerado.textContent = "---";
@@ -562,16 +538,13 @@ function actualizarProgreso(){
     let progreso = 0;
 
     const tieneContrato = contrato.value.trim() !== "";
-    const tieneTipo = tipoFoto.value !== "";
-    const tieneFoto = archivoSeleccionado !== null;
+    const tieneArchivos = archivosSeleccionados.length > 0;
 
     pasoContrato.classList.toggle("activo", tieneContrato);
-    pasoTipo.classList.toggle("activo", tieneTipo);
-    pasoFoto.classList.toggle("activo", tieneFoto);
+    pasoFoto.classList.toggle("activo", tieneArchivos);
 
-    if(tieneContrato) progreso += 33;
-    if(tieneTipo) progreso += 33;
-    if(tieneFoto) progreso += 34;
+    if(tieneContrato) progreso += 50;
+    if(tieneArchivos) progreso += 50;
 
     pasoEnviar.classList.toggle("activo", progreso === 100);
 
@@ -581,26 +554,49 @@ function actualizarProgreso(){
 
 function actualizarResumen(){
     const numeroContrato = contrato.value.trim();
-    const tipo = tipoFoto.value;
-    const archivo = nombreGenerado.textContent;
 
-    if(numeroContrato || tipo || archivoSeleccionado !== null){
+    if(numeroContrato || archivosSeleccionados.length > 0){
         resumenBox.style.display = "block";
         resumenContrato.textContent = numeroContrato || "---";
-        resumenTipo.textContent = tipo || "---";
-        resumenArchivo.textContent = archivo !== "---" ? archivo : "---";
+        resumenCantidad.textContent = archivosSeleccionados.length;
     }else{
         resumenBox.style.display = "none";
     }
 }
 
+function actualizarListaArchivos(){
+
+    contadorFotos.textContent =
+        `📷 Archivos seleccionados: ${archivosSeleccionados.length}`;
+
+    if(archivosSeleccionados.length > 0){
+
+        previewBox.style.display = "block";
+
+        listaArchivos.innerHTML = archivosSeleccionados.map(function(archivo, index){
+
+            const tipo = archivo.type === "application/pdf" ? "📄" : "📸";
+            const numeroContrato = contrato.value.trim();
+            const nombreFinal = numeroContrato
+                ? generarNombreArchivo(numeroContrato, archivo, index)
+                : archivo.name;
+
+            return `${tipo} ${nombreFinal}`;
+
+        }).join("<br>");
+
+    }else{
+        previewBox.style.display = "none";
+        listaArchivos.innerHTML = "";
+    }
+}
+
 function actualizarBoton(){
     const tieneContrato = contrato.value.trim() !== "";
-    const tieneTipo = tipoFoto.value !== "";
-    const tieneFoto = archivoSeleccionado !== null;
+    const tieneArchivos = archivosSeleccionados.length > 0;
 
-    if(tieneContrato && tieneTipo && tieneFoto){
-        btnEnviar.textContent = "✅ Evidencia lista para enviar";
+    if(tieneContrato && tieneArchivos){
+        btnEnviar.textContent = "✅ Evidencias listas para enviar";
         btnEnviar.classList.remove("incompleto");
     }else{
         btnEnviar.textContent = "Complete la información";
@@ -610,8 +606,6 @@ function actualizarBoton(){
 
 async function validarEnvio(){
     const numeroContrato = contrato.value.trim();
-    const tipo = tipoFoto.value;
-    const archivo = archivoSeleccionado;
 
     if(numeroContrato === ""){
         mostrarToast("⚠️ Ingrese el número de contrato");
@@ -619,84 +613,84 @@ async function validarEnvio(){
         return;
     }
 
-    if(tipo === ""){
-        mostrarToast("⚠️ Seleccione el tipo de evidencia");
-        tipoFoto.focus();
+    if(archivosSeleccionados.length === 0){
+        mostrarToast("⚠️ Seleccione al menos un archivo");
         return;
     }
 
- if(!archivo){
-    mostrarToast("⚠️ Seleccione una fotografía");
-    return;
-}
-
-    mostrarToast("⏳ Enviando evidencia...");
-
-    const contenidoBase64 = await convertirArchivoBase64(archivo);
-
-    const datos = {
-        contrato: numeroContrato,
-        tipoEvidencia: tipo,
-        nombreArchivo: nombreGenerado.textContent,
-        contenidoBase64: contenidoBase64
-    };
-
     try{
-        const respuesta = await fetch(URL_POWER_AUTOMATE, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(datos)
-        });
+        mostrarToast(`⏳ Enviando 0 de ${archivosSeleccionados.length}...`);
 
-        if(respuesta.ok){
+        let ultimoConsecutivo = obtenerConsecutivoActual(numeroContrato) - 1;
 
-    const clave = `evidencia_${numeroContrato}_${tipo}`;
-    const nombreActual = nombreGenerado.textContent;
-    const partes = nombreActual.split("_");
-    const numeroConsecutivo = partes[2].split(".")[0];
+        for(let i = 0; i < archivosSeleccionados.length; i++){
 
-    localStorage.setItem(clave, parseInt(numeroConsecutivo));
+            const archivo = archivosSeleccionados[i];
+            const nombreArchivo = generarNombreArchivo(numeroContrato, archivo, i);
+            const contenidoBase64 = await convertirArchivoBase64(archivo);
 
-mostrarToast("✅ Evidencia enviada correctamente");
+            const datos = {
+                contrato: numeroContrato,
+                tipoEvidencia: "GENERAL",
+                nombreArchivo: nombreArchivo,
+                contenidoBase64: contenidoBase64
+            };
 
-/* LIMPIAR FORMULARIO */
-contrato.value = "";
-tipoFoto.value = "";
-fotoCamara.value = "";
-fotoGaleria.value = "";
-archivoSeleccionado = null;
+            const respuesta = await fetch(URL_POWER_AUTOMATE, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(datos)
+            });
 
-preview.src = "";
-preview.style.display = "none";
-previewBox.style.display = "none";
+            if(!respuesta.ok){
+                throw new Error("Error al enviar " + nombreArchivo);
+            }
 
-contadorFotos.textContent = "📷 Fotos seleccionadas: 0";
+            const partes = nombreArchivo.split("_");
+            const numeroConsecutivo = partes[1].split(".")[0];
+            ultimoConsecutivo = parseInt(numeroConsecutivo);
 
-nombreGenerado.textContent = "---";
-nombreGeneradoBox.style.display = "none";
-
-resumenBox.style.display = "none";
-
-actualizarInterfaz();
-
-contrato.focus();
-
-}else{
-            mostrarToast("❌ Error al enviar la evidencia");
+            mostrarToast(`⏳ Enviando ${i + 1} de ${archivosSeleccionados.length}...`);
         }
 
-}catch(error){
-    console.error(error);
-    mostrarToast("❌ Error técnico");
+        const clave = `evidencia_${numeroContrato}`;
+        localStorage.setItem(clave, ultimoConsecutivo);
+
+        mostrarToast("✅ Evidencias enviadas correctamente");
+
+        limpiarFormulario();
+
+    }catch(error){
+        console.error(error);
+        mostrarToast("❌ Error al enviar una evidencia");
+    }
 }
+
+function limpiarFormulario(){
+    contrato.value = "";
+    fotoCamara.value = "";
+    fotoGaleria.value = "";
+    archivosSeleccionados = [];
+
+    contadorFotos.textContent = "📷 Archivos seleccionados: 0";
+
+    nombreGenerado.textContent = "---";
+    nombreGeneradoBox.style.display = "none";
+
+    resumenBox.style.display = "none";
+    previewBox.style.display = "none";
+    listaArchivos.innerHTML = "";
+
+    actualizarInterfaz();
+
+    contrato.focus();
 }
 
 function convertirArchivoBase64(archivo){
     return new Promise(function(resolve, reject){
 
-        // SI ES PDF
         if(archivo.type === "application/pdf"){
 
             const lector = new FileReader();
@@ -711,11 +705,9 @@ function convertirArchivoBase64(archivo){
             };
 
             lector.readAsDataURL(archivo);
-
             return;
         }
 
-        // SI ES IMAGEN
         const lector = new FileReader();
 
         lector.onload = function(event){
@@ -800,4 +792,3 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
-
